@@ -1,5 +1,7 @@
 import './App.css';
 
+import Graph from './components/Graph';
+
 export default function App() {
-  return <div className="text-2xl text-rose-500">amk</div>;
+  return <Graph />;
 }

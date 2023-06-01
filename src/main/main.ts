@@ -15,6 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+import { ReadlineParser, SerialPort } from 'serialport';
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -22,6 +23,16 @@ class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+
+const port = new SerialPort({
+  path: '/dev/tty-usbserial1',
+  baudRate: 115200,
+});
+const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
+// Listen for data from the Arduino
+parser.on('data', (data: string) => {
+  console.log(`Received: ${data}`);
+});
 
 let mainWindow: BrowserWindow | null = null;
 

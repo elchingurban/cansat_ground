@@ -12,7 +12,11 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    "react/function-component-definition": <enabled>, {
+    "namedComponents": "function-declaration" | "function-expression" | "arrow-function" | Array<"function-declaration" | "function-expression" | "arrow-function">,
+    "unnamedComponents": "function-expression" | "arrow-function" | Array<"function-expression" | "arrow-function">
+    }
   },
   parserOptions: {
     ecmaVersion: 2020,
