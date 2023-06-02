@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Map, { Marker, Source, Layer } from 'react-map-gl';
-import { MAPBOX_TOKEN } from '../constants/index';
+import { MAPBOX_TOKEN, MAPBOX_STYLE_SATELLITE } from '../core/constants';
 
 export const MapComponent: React.FC = () => {
   const [lng, setLng] = useState(49.85047);
@@ -31,7 +31,7 @@ export const MapComponent: React.FC = () => {
         width: '100%',
         height: '100%',
       }}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
+      mapStyle={MAPBOX_STYLE_SATELLITE}
       onClick={onClickMap}
     >
       <Marker {...marker} anchor="bottom"></Marker>
