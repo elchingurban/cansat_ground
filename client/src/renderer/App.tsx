@@ -4,24 +4,12 @@ import './App.css';
 
 import Graph from './components/Graph';
 import MapComponent from './components/Map';
-
-interface TelemetryDTOType {
-  time: string;
-  lat: string;
-  lon: string;
-  altitude: string;
-  status: string;
-  power: string;
-}
-
-export interface AltitudeDataType {
-  altitude: string;
-  time: Date;
-}
+import TelemetryView from './components/TelemetryView';
+import { AltitudeDataType, TelemetryDTOType } from './types';
 
 export const App: React.FC = () => {
-  const [telemetry, setTelemetry] = useState<TelemetryDTOType | null>(null);
   const [altitudeData, setAltitudeData] = useState<AltitudeDataType[]>([]);
+  const [telemetry, setTelemetry] = useState<TelemetryDTOType | null>(null);
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
@@ -33,7 +21,10 @@ export const App: React.FC = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setTelemetry(data);
-      setAltitudeData(altitudeData => [...altitudeData, {altitude: data.altitude, time: new Date}])
+      setAltitudeData((altitudeData) => [
+        ...altitudeData,
+        { altitude: data.altitude, time: new Date() },
+      ]);
     };
 
     socket.onerror = (error) => {
@@ -49,8 +40,6 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  if(!telemetry) return <>Loading..</>
-
   return (
     <div className="flex h-screen flex-wrap border">
       <div className="h-1/2 w-full border border-red-500 sm:h-screen sm:w-1/2">
@@ -64,9 +53,14 @@ export const App: React.FC = () => {
       <div className="h-1/2 w-full border border-yellow-500 sm:h-screen sm:w-1/2">
         <div className="h-3/5 border border-purple-500">Camera</div>
         <div className="h-2/5 border border-pink-500">
-          <div>
-            Altitude {telemetry.altitude}
-          </div>
+          <TelemetryView
+            time={''}
+            lat={''}
+            lon={''}
+            altitude={''}
+            status={''}
+            power={''}
+          />
         </div>
       </div>
     </div>
