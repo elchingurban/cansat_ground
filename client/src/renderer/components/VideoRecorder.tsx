@@ -75,20 +75,6 @@ function VideoRecorder() {
     [deviceId]
   );
 
-  useEffect(() => {
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) => {
-        const videoDevices = devices.filter(
-          (device) => device.kind === 'videoinput'
-        );
-        console.log('videoDevices', videoDevices);
-      })
-      .catch((error) => {
-        console.error('Error accessing media devices:', error);
-      });
-  });
-
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-between">
       <Webcam
