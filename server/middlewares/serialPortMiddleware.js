@@ -1,7 +1,7 @@
 const { SerialPort, ReadlineParser } = require("serialport");
 require("dotenv").config();
-
-const portPath = process.env.TELEMETRY_SERIAL_PORT;
+const process = require("process");
+const portPath = process.argv[2];
 
 const serialPort = new SerialPort({
   path: portPath,

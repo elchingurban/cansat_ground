@@ -1,5 +1,5 @@
 export interface TelemetryDTOType {
-telemetry: any
+  telemetry: any;
 }
 
 export interface AltitudeDataType {

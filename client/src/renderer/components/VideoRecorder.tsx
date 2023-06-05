@@ -6,7 +6,7 @@ function VideoRecorder() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const [deviceId, setDeviceId] = useState("");
+  const [deviceId, setDeviceId] = useState('');
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
 
   const handleDevices = useCallback(

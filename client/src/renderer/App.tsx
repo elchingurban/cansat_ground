@@ -24,11 +24,11 @@ export const App: React.FC = () => {
       const data = JSON.parse(event.data);
       setTelemetry(data);
       setAltitudeData((altitudeData) => {
-        if(altitudeData.length > 50) altitudeData.shift();
+        if (altitudeData.length > 50) altitudeData.shift();
         return [
           ...altitudeData,
-          { altitude: data.altitude, time: (new Date()).toString() },
-        ]
+          { altitude: data.altitude, time: new Date().toString() },
+        ];
       });
     };
 
@@ -50,7 +50,7 @@ export const App: React.FC = () => {
   return (
     <div className="flex h-screen flex-wrap">
       <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
-        <div className="h-1/2 border border-white flex items-center justify-center pr-12">
+        <div className="flex h-1/2 items-center justify-center border border-white pr-12">
           <Graph altitudeData={altitudeData} />
         </div>
         <div className="h-1/2 border border-white">
@@ -58,11 +58,11 @@ export const App: React.FC = () => {
         </div>
       </div>
       <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
-        <div className="h-3/5 border border-white"><VideoRecorder /></div>
+        <div className="h-3/5 border border-white">
+          <VideoRecorder />
+        </div>
         <div className="h-2/5 border border-white">
-          <TelemetryView
-            telemetry={telemetry}
-          />
+          <TelemetryView telemetry={telemetry} />
         </div>
       </div>
     </div>

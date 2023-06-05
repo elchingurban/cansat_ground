@@ -12,7 +12,9 @@ import {
 } from 'recharts';
 import { AltitudeDataType } from 'renderer/types';
 
-export const Graph: React.FC<{altitudeData: AltitudeDataType[]}> = ({altitudeData}) => {
+export const Graph: React.FC<{ altitudeData: AltitudeDataType[] }> = ({
+  altitudeData,
+}) => {
   const formattedData = altitudeData.map((item) => ({
     ...item,
     time: Date.parse(item.time),
@@ -24,11 +26,11 @@ export const Graph: React.FC<{altitudeData: AltitudeDataType[]}> = ({altitudeDat
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
           dataKey="time"
-          domain={["auto", "auto"]}
+          domain={['auto', 'auto']}
           tickFormatter={(time) =>
             new Date(time).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
+              hour: '2-digit',
+              minute: '2-digit',
             })
           }
         />
