@@ -2,13 +2,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 
 function VideoRecorder() {
-    const webcamRef = useRef(null);
-    const mediaRecorderRef = useRef(null);
+    const webcamRef = useRef<Webcam>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const [capturing, setCapturing] = useState(false);
     const [recordedChunks, setRecordedChunks] = useState([]);
   
     const handleDataAvailable = useCallback(
-      ({ data }) => {
+      ({ data }: any) => {
         if (data.size > 0) {
           setRecordedChunks((prev) => prev.concat(data));
         }
@@ -17,8 +17,9 @@ function VideoRecorder() {
     );
 
     const handleStartCaptureClick = useCallback(() => {
+      if(!webcamRef.current) return;
         setCapturing(true);
-        mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+        mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream!, {
           mimeType: "video/webm",
         });
         mediaRecorderRef.current.addEventListener(
@@ -29,7 +30,7 @@ function VideoRecorder() {
       }, [webcamRef, setCapturing, mediaRecorderRef, handleDataAvailable]);
     
       const handleStopCaptureClick = useCallback(() => {
-        mediaRecorderRef.current.stop();
+        mediaRecorderRef.current?.stop();
         setCapturing(false);
       }, [mediaRecorderRef, setCapturing]);
     
@@ -41,9 +42,8 @@ function VideoRecorder() {
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           document.body.appendChild(a);
-          a.style = "display: none";
           a.href = url;
-          a.download = "react-webcam-stream-capture.webm";
+          a.download = `ground-video-${(new Date()).toString()}.webm`;
           a.click();
           window.URL.revokeObjectURL(url);
           setRecordedChunks([]);
