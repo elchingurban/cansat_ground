@@ -6,6 +6,7 @@ import Graph from './components/Graph';
 import MapComponent from './components/Map';
 import TelemetryView from './components/TelemetryView';
 import { AltitudeDataType, TelemetryDTOType } from './types';
+import Loading from './components/Loading';
 
 export const App: React.FC = () => {
   const [altitudeData, setAltitudeData] = useState<AltitudeDataType[]>([]);
@@ -21,10 +22,13 @@ export const App: React.FC = () => {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setTelemetry(data);
-      setAltitudeData((altitudeData) => [
-        ...altitudeData,
-        { altitude: data.altitude, time: new Date() },
-      ]);
+      setAltitudeData((altitudeData) => {
+        if(altitudeData.length > 50) altitudeData.shift();
+        return [
+          ...altitudeData,
+          { altitude: data.altitude, time: (new Date()).toString() },
+        ]
+      });
     };
 
     socket.onerror = (error) => {
@@ -40,26 +44,23 @@ export const App: React.FC = () => {
     };
   }, []);
 
+  if (!telemetry) return <Loading />;
+
   return (
-    <div className="flex h-screen flex-wrap border">
-      <div className="h-1/2 w-full border border-red-500 sm:h-screen sm:w-1/2">
-        <div className="h-1/2 border border-green-500">
+    <div className="flex h-screen flex-wrap">
+      <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
+        <div className="h-1/2 border border-white flex items-center justify-center pr-12">
           <Graph altitudeData={altitudeData} />
         </div>
-        <div className="h-1/2 border border-blue-500">
+        <div className="h-1/2 border border-white">
           <MapComponent />
         </div>
       </div>
-      <div className="h-1/2 w-full border border-yellow-500 sm:h-screen sm:w-1/2">
-        <div className="h-3/5 border border-purple-500">Camera</div>
-        <div className="h-2/5 border border-pink-500">
+      <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
+        <div className="h-3/5 border border-white">Camera</div>
+        <div className="h-2/5 border border-white">
           <TelemetryView
-            time={''}
-            lat={''}
-            lon={''}
-            altitude={''}
-            status={''}
-            power={''}
+            telemetry={telemetry}
           />
         </div>
       </div>

@@ -11,7 +11,14 @@ app.use(express.json());
 
 wss.on("connection", function connection(ws) {
   onDataReceived((data) => {
-    ws.send(JSON.stringify(data));
+    if (data.altitude) {
+      const telemetryObject = JSON.stringify({
+        ...data,
+        altitude: Number(data.altitude.split(" ")[0]),
+      });
+
+      ws.send(telemetryObject);
+    }
     writeToInflux(data);
   });
 

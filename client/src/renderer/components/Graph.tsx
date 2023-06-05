@@ -10,19 +10,37 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { AltitudeDataType } from 'renderer/App';
+import { AltitudeDataType } from 'renderer/types';
 
 export const Graph: React.FC<{altitudeData: AltitudeDataType[]}> = ({altitudeData}) => {
+  const formattedData = altitudeData.map((item) => ({
+    ...item,
+    time: Date.parse(item.time),
+  }));
 
   return (
-    <ResponsiveContainer width="100%" height="80%">
-      <LineChart width={600} height={400} data={altitudeData}>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart width={600} height={400} data={formattedData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="time" />
+        <XAxis
+          dataKey="time"
+          domain={["auto", "auto"]}
+          tickFormatter={(time) =>
+            new Date(time).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          }
+        />
         <YAxis />
+        <Line
+          type="monotone"
+          dataKey="altitude"
+          isAnimationActive={false}
+          stroke="#e52020"
+        />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="altitude" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
   );
