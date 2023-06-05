@@ -6,7 +6,8 @@ import Graph from './components/Graph';
 import MapComponent from './components/Map';
 import TelemetryView from './components/TelemetryView';
 import { AltitudeDataType, TelemetryDTOType } from './types';
-import Loading from './components/Loading';
+import Loading from './components/Loader/Loading';
+import VideoRecorder from './components/VideoRecorder';
 
 export const App: React.FC = () => {
   const [altitudeData, setAltitudeData] = useState<AltitudeDataType[]>([]);
@@ -57,7 +58,7 @@ export const App: React.FC = () => {
         </div>
       </div>
       <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
-        <div className="h-3/5 border border-white">Camera</div>
+        <div className="h-3/5 border border-white"><VideoRecorder /></div>
         <div className="h-2/5 border border-white">
           <TelemetryView
             telemetry={telemetry}
