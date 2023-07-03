@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const { handleUpgrade, wss } = require("./middlewares/websocketMiddleware");
 const { onDataReceived } = require("./middlewares/serialPortMiddleware");
-const { writeToInflux } = require("./middlewares/influxdbMiddleware");
+const { writeToCsv } = require("./middlewares/csvMiddleware");
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +19,8 @@ wss.on("connection", function connection(ws) {
 
       ws.send(telemetryObject);
     }
-    writeToInflux(data);
+
+    writeToCsv(data);
   });
 
   ws.on("close", function () {

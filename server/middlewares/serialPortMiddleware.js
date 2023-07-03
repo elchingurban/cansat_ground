@@ -12,6 +12,7 @@ const parser = serialPort.pipe(new ReadlineParser({ delimiter: "\n" }));
 
 const onDataReceived = (callback) => {
   parser.on("data", (data) => {
+    console.log(data);
     const arr = data.split(",");
     const time = arr[0];
     const lat = arr[1];
@@ -19,7 +20,8 @@ const onDataReceived = (callback) => {
     const altitude = arr[3];
     const status = Boolean(arr[4]);
     const power = arr[5];
-    const obj = {
+
+    const telemetryObject = {
       time,
       lat,
       lon,
@@ -27,7 +29,8 @@ const onDataReceived = (callback) => {
       status,
       power,
     };
-    callback(obj);
+
+    callback(telemetryObject);
   });
 };
 

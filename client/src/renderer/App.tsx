@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import './App.css';
-
 import Graph from './components/Graph';
 import MapComponent from './components/Map';
 import TelemetryView from './components/TelemetryView';
@@ -9,9 +7,25 @@ import { AltitudeDataType, TelemetryDTOType } from './types';
 import Loading from './components/Loader/Loading';
 import VideoRecorder from './components/VideoRecorder';
 
+import './App.css';
+
 export const App: React.FC = () => {
   const [altitudeData, setAltitudeData] = useState<AltitudeDataType[]>([]);
   const [telemetry, setTelemetry] = useState<TelemetryDTOType | null>(null);
+  const [marker, setMarker] = useState({
+    longitude: 49.85047,
+    latitude: 40.3758,
+  });
+
+  useEffect(() => {
+    setTelemetry({
+      telemetry: {
+        lat: 40.34522,
+        lon: 49.85047,
+        altitude: '200',
+      }
+    });
+  }, [])
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
@@ -21,15 +35,21 @@ export const App: React.FC = () => {
     };
 
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setTelemetry(data);
-      setAltitudeData((altitudeData) => {
-        if (altitudeData.length > 50) altitudeData.shift();
-        return [
-          ...altitudeData,
-          { altitude: data.altitude, time: new Date().toString() },
-        ];
-      });
+      try {
+        const data = JSON.parse(event.data);
+        if(data) {
+          setTelemetry(data);
+          setAltitudeData((altitudeData) => {
+            if (altitudeData.length > 50) altitudeData.shift();
+            return [
+              ...altitudeData,
+              { altitude: data.altitude, time: new Date().toString() },
+            ];
+          });
+          setMarker({latitude: data.lat, longitude: data.lon});
+        }
+      } catch(err) {
+      }
     };
 
     socket.onerror = (error) => {
@@ -54,7 +74,7 @@ export const App: React.FC = () => {
           <Graph altitudeData={altitudeData} />
         </div>
         <div className="h-1/2 border border-white">
-          <MapComponent />
+          <MapComponent marker={marker} />
         </div>
       </div>
       <div className="h-1/2 w-full border border-white  sm:h-screen sm:w-1/2">
